@@ -141,6 +141,7 @@ class BetaTCVAE(nn.Module):
         mi_loss = (log_q_zx - log_q_z).mean()
         tc_loss = (log_q_z - log_prod_q_z).mean()
         kl_loss = (log_prod_q_z - log_p_z).mean()
+        print(kl_loss.item())
         if self.training:
             rate = min(self.iter, self.capacity_max_iter) / self.capacity_max_iter
             self.iter += 1
