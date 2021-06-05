@@ -22,9 +22,9 @@ Personal Pytorch Implementations of Variational Auto-Encoders.
 
 | Models | Original Images | Reconstructed Images |  Generated Images |
 | :-: | :-: | :-: | :-: |
-| VAE | <img src='imgs/VAE-o.png' width = 250, height = 250> | <img src='imgs/VAE-r.png' width = 250, height = 250> | <img src='imgs/VAE-g.png' width = 250, height = 250> |
-| CVAE | <img src='imgs/CVAE-o.png' width = 250, height = 250> | <img src='imgs/CVAE-r.png' width = 250, height = 250> | <img src='imgs/CVAE-g.png' width = 250, height = 250> |
-| Beta-VAE | <img src='imgs/BetaVAE-o.png' width = 250, height = 250> | <img src='imgs/BetaVAE-r.png' width = 250, height = 250> | <img src='imgs/BetaVAE-g.png' width = 250, height = 250> |
+| VAE | <img src='imgs/VAE-o.png' width = 200, height = 200> | <img src='imgs/VAE-r.png' width = 200, height = 200> | <img src='imgs/VAE-g.png' width = 200, height = 200> |
+| CVAE | <img src='imgs/CVAE-o.png' width = 200, height = 200> | <img src='imgs/CVAE-r.png' width = 200, height = 200> | <img src='imgs/CVAE-g.png' width = 200, height = 200> |
+| Beta-VAE | <img src='imgs/BetaVAE-o.png' width = 200, height = 200> | <img src='imgs/BetaVAE-r.png' width = 200, height = 200> | <img src='imgs/BetaVAE-g.png' width = 200, height = 200> |
 | Disentangled Beta-VAE | | | |
 | Beta-TC-VAE | | | |
 
