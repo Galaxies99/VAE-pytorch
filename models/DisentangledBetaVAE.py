@@ -114,6 +114,8 @@ class DisentangledBetaVAE(nn.Module):
         kl_weight = kwargs['kl_weight']
         C = min(self.iter, self.capacity_max_iter) / self.capacity_max_iter * self.capacity_limit
         loss = self.gamma * kl_weight * torch.abs(kl_loss - C) + recon_loss
+        if self.training:
+            self.iter += 1
         return {
             'loss': loss,
             'reconstruction loss': recon_loss, 
