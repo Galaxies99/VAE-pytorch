@@ -20,7 +20,7 @@ Personal Pytorch Implementations of Variational Auto-Encoders.
 
 ## References
 
-1. Subramanian, A.K, PyTorch-VAE, GitHub repository, GitHub (2020), online available at (https://github.com/AntixK/PyTorch-VAE)[https://github.com/AntixK/PyTorch-VAE].
+1. Subramanian, A.K, PyTorch-VAE, GitHub repository, GitHub (2020), online available at [https://github.com/AntixK/PyTorch-VAE](https://github.com/AntixK/PyTorch-VAE).
 2. Kingma, Diederik P., and Max Welling. "Auto-encoding variational bayes." arXiv preprint arXiv:1312.6114 (2013).
 3. Sohn, Kihyuk, Honglak Lee, and Xinchen Yan. "Learning structured output representation using deep conditional generative models." Advances in neural information processing systems 28 (2015): 3483-3491.
 4. Higgins, Irina, et al. "beta-vae: Learning basic visual concepts with a constrained variational framework." (2016).
