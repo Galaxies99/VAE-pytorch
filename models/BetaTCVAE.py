@@ -109,8 +109,7 @@ class BetaTCVAE(nn.Module):
         z = self.reparameterize(mu, log_var)
         return [self.decode(z), x, mu, log_var, z]
     
-    @staticmethod
-    def log_gaussian_density(x, mu, log_var):
+    def log_gaussian_density(self, x, mu, log_var):
         return -0.5 * (np.log(2 * np.pi) + log_var) - 0.5 * ((x - mu) ** 2 * torch.exp(- log_var))
 
     def loss(self, recon, x, mu, log_var, z, **kwargs):
@@ -120,7 +119,7 @@ class BetaTCVAE(nn.Module):
             raise AttributeError('Please pass parameter "dataset_size" into the loss function.')
         batch_size = kwargs['batch_size']
         dataset_size = kwargs['dataset_size']
-        kl_loss = torch.mean(-0.5 * torch.sum(1 + log_var - mu ** 2 - log_var.exp(), dim = 1), dim = 0)
+        kl_weight = kwargs['kl_weight']
         recon_loss = F.mse_loss(recon, x)
         log_q_zx = self.log_gaussian_density(z, mu, log_var).sum(dim = 1)
         log_p_z = self.log_gaussian_density(z, torch.zeros_like(mu), torch.zeros_like(log_var)).sum(dim = 1)
@@ -135,23 +134,23 @@ class BetaTCVAE(nn.Module):
         imp_weights.view(-1)[::batch_size] = 1 / dataset_size
         imp_weights.view(-1)[1::batch_size] = strat_weight
         imp_weights[batch_size - 2, 0] = strat_weight
-        log_iw_mat = torch.log(imp_weights)
+        log_iw_mat = imp_weights.log()
         mat_log_q_z += rearrange(log_iw_mat, 'b bb -> b bb 1')
         log_q_z = torch.logsumexp(mat_log_q_z.sum(dim = 2), dim = 1)
         log_prod_q_z = torch.logsumexp(mat_log_q_z, dim = 1).sum(dim = 1)
         mi_loss = (log_q_zx - log_q_z).mean()
         tc_loss = (log_q_z - log_prod_q_z).mean()
-        kld_loss = (log_prod_q_z - log_p_z).mean()
+        kl_loss = (log_prod_q_z - log_p_z).mean()
         if self.training:
             rate = min(self.iter, self.capacity_max_iter) / self.capacity_max_iter
             self.iter += 1
         else:
             rate = 1
-        loss = recon_loss + self.alpha * mi_loss + self.beta * tc_loss + self.gamma * rate * kld_loss
+        loss = recon_loss + kl_weight * (self.alpha * mi_loss + self.beta * tc_loss + self.gamma * rate * kl_loss)
         return {
             'loss': loss,
             'reconstruction loss': recon_loss, 
-            'kl loss': kld_loss,
+            'kl loss': kl_loss,
             'tc loss': tc_loss,
             'mi loss': mi_loss
         }

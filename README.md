@@ -20,13 +20,13 @@ Personal Pytorch Implementations of Variational Auto-Encoders.
 
 ## Performance on CelebA Dataset
 
-| Models | Original Images | Reconstructed Images |  Generated Images |
-| :-: | :-: | :-: | :-: |
-| VAE | <img src='imgs/VAE-o.png' width = 200, height = 200> | <img src='imgs/VAE-r.png' width = 200, height = 200> | <img src='imgs/VAE-g.png' width = 200, height = 200> |
-| CVAE | <img src='imgs/CVAE-o.png' width = 200, height = 200> | <img src='imgs/CVAE-r.png' width = 200, height = 200> | <img src='imgs/CVAE-g.png' width = 200, height = 200> |
-| Beta-VAE | <img src='imgs/BetaVAE-o.png' width = 200, height = 200> | <img src='imgs/BetaVAE-r.png' width = 200, height = 200> | <img src='imgs/BetaVAE-g.png' width = 200, height = 200> |
-| Disentangled Beta-VAE | | | |
-| Beta-TC-VAE | | | |
+| Models | Generated Images |
+| :-: |  :-: |
+| VAE [Ref. 2] | ![VAE](imgs/VAE-g.png) |
+| CVAE [Ref. 3] | ![CVAE](imgs/CVAE-g.png) |
+| Beta-VAE [Ref. 4] | ![BetaVAE](imgs/BetaVAE-g.png) |
+| Disentangled Beta-VAE [Ref. 5] | ![DisentangledBetaVAE](imgs/DisentangledBetaVAE-g.png) |
+| Beta-TC-VAE [Ref. 6] | |
 
 
 ## References

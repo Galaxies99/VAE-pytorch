@@ -116,6 +116,8 @@ class CVAE(nn.Module):
         return [self.decode(z), x, mu, log_var]
     
     def loss(self, recon, x, mu, log_var, **kwargs):
+        if 'kl_weight' not in kwargs.keys():
+            raise AttributeError('Please pass parameter "kl_weight" into the loss function.')
         kl_loss = torch.mean(-0.5 * torch.sum(1 + log_var - mu ** 2 - log_var.exp(), dim = 1), dim = 0)
         recon_loss = F.mse_loss(recon, x)
         kl_weight = kwargs['kl_weight']
