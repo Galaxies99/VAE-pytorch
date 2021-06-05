@@ -7,7 +7,7 @@ Personal Pytorch Implementations of Variational Auto-Encoders.
 - [x] VAE
 - [x] CVAE
 - [x] Beta-VAE
-- [ ] Disentangled Beta-VAE
+- [x] Disentangled Beta-VAE
 - [ ] Beta-TC-VAE
 - [ ] DFC-VAE
 - [ ] MSSIM-VAE

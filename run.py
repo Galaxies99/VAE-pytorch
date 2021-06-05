@@ -12,6 +12,7 @@ import torchvision.utils as tuitls
 from models.VAE import VAE
 from models.CVAE import CVAE
 from models.BetaVAE import BetaVAE
+from models.DisentangledBetaVAE import DisentangledBetaVAE
 
 
 logging.setLoggerClass(ColoredLogger)
@@ -50,6 +51,10 @@ elif model_name == 'CVAE':
     model = CVAE(**model_params)
 elif model_name == 'BetaVAE':
     model = BetaVAE(**model_params)
+elif model_name == 'DisentangledBetaVAE':
+    model = DisentangledBetaVAE(**model_params)
+else:
+    raise NotImplementedError('Invalid model name.')
 
 multigpu = trainer_params.get('multigpu', False)
 if multigpu:
