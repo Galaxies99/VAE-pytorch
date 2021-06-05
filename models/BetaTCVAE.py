@@ -1,16 +1,19 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import numpy as np
 from einops.layers.torch import Rearrange
+from einops import rearrange
 
 
-class DisentangledBetaVAE(nn.Module):
-    def __init__(self, image_size, in_channels, gamma, capacity_limit, capacity_max_iter, **kwargs):
-        super(DisentangledBetaVAE, self).__init__()
+class BetaTCVAE(nn.Module):
+    def __init__(self, image_size, in_channels, beta, capacity_max_iter, **kwargs):
+        super(BetaTCVAE, self).__init__()
         self.latent_dim = kwargs.get('latent_dim', 128)
         self.hidden_dim = kwargs.get('hidden_dim', [32, 64, 128, 256, 512])
-        self.gamma = gamma
-        self.capacity_limit = capacity_limit
+        self.alpha = kwargs.get('alpha', 1)
+        self.beta = beta
+        self.gamma = kwargs.get('gamma', 1)
         self.capacity_max_iter = capacity_max_iter
         self.iter = 0
         self.encoder_layer_num = len(self.hidden_dim)
@@ -104,24 +107,53 @@ class DisentangledBetaVAE(nn.Module):
     def forward(self, x, **kwargs):
         mu, log_var = self.encode(x)
         z = self.reparameterize(mu, log_var)
-        return [self.decode(z), x, mu, log_var]
+        return [self.decode(z), x, mu, log_var, z]
     
-    def loss(self, recon, x, mu, log_var, **kwargs):
-        if 'kl_weight' not in kwargs.keys():
-            raise AttributeError('Please pass parameter "kl_weight" into the loss function.')
+    @staticmethod
+    def log_gaussian_density(x, mu, log_var):
+        return -0.5 * (np.log(2 * np.pi) + log_var) - 0.5 * ((x - mu) ** 2 * torch.exp(- log_var))
+
+    def loss(self, recon, x, mu, log_var, z, **kwargs):
+        if 'batch_size' not in kwargs.keys():
+            raise AttributeError('Please pass parameter "batch_size" into the loss function.')
+        if 'dataset_size' not in kwargs.keys():
+            raise AttributeError('Please pass parameter "dataset_size" into the loss function.')
+        batch_size = kwargs['batch_size']
+        dataset_size = kwargs['dataset_size']
         kl_loss = torch.mean(-0.5 * torch.sum(1 + log_var - mu ** 2 - log_var.exp(), dim = 1), dim = 0)
         recon_loss = F.mse_loss(recon, x)
-        kl_weight = kwargs['kl_weight']
+        log_q_zx = self.log_gaussian_density(z, mu, log_var).sum(dim = 1)
+        log_p_z = self.log_gaussian_density(z, torch.zeros_like(mu), torch.zeros_like(log_var)).sum(dim = 1)
+        # Mini-batch weighted sampling
+        mat_log_q_z = self.log_gaussian_density(
+            rearrange(z, 'b d -> b 1 d'),
+            rearrange(mu, 'b d -> 1 b d'),
+            rearrange(log_var, 'b d -> 1 b d')
+        )
+        strat_weight = (dataset_size - batch_size + 1) / (dataset_size * (batch_size - 1))
+        imp_weights = torch.Tensor(batch_size, batch_size).fill_(1 / (batch_size - 1)).to(x.device)
+        imp_weights.view(-1)[::batch_size] = 1 / dataset_size
+        imp_weights.view(-1)[1::batch_size] = strat_weight
+        imp_weights[batch_size - 2, 0] = strat_weight
+        log_iw_mat = torch.log(imp_weights)
+        mat_log_q_z += rearrange(log_iw_mat, 'b bb -> b bb 1')
+        log_q_z = torch.logsumexp(mat_log_q_z.sum(dim = 2), dim = 1)
+        log_prod_q_z = torch.logsumexp(mat_log_q_z, dim = 1).sum(dim = 1)
+        mi_loss = (log_q_zx - log_q_z).mean()
+        tc_loss = (log_q_z - log_prod_q_z).mean()
+        kld_loss = (log_prod_q_z - log_p_z).mean()
         if self.training:
-            C = min(self.iter, self.capacity_max_iter) / self.capacity_max_iter * self.capacity_limit
+            rate = min(self.iter, self.capacity_max_iter) / self.capacity_max_iter
             self.iter += 1
         else:
-            C = self.capacity_limit
-        loss = self.gamma * kl_weight * torch.abs(kl_loss - C) + recon_loss
+            rate = 1
+        loss = recon_loss + self.alpha * mi_loss + self.beta * tc_loss + self.gamma * rate * kld_loss
         return {
             'loss': loss,
             'reconstruction loss': recon_loss, 
-            'kl loss': kl_loss
+            'kl loss': kld_loss,
+            'tc loss': tc_loss,
+            'mi loss': mi_loss
         }
 
     def sample(self, num, device, **kwargs):

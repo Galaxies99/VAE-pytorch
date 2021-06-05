@@ -18,6 +18,17 @@ Personal Pytorch Implementations of Variational Auto-Encoders.
 - [ ] VQ-VAE
 - [ ] DIP-VAE
 
+## Performance on CelebA Dataset
+
+| Models | Original Images | Reconstructed Images |  Generated Images |
+| :-: | :-: | :-: | :-: |
+| VAE | ![VAE-o](imgs/VAE-o.png) | ![VAE-r](imgs/VAE-r.png) | ![VAE-g](imgs/VAE-g.png) |
+| CVAE | ![CVAE-o](imgs/CVAE-o.png)| ![CVAE-r](imgs/CVAE-r.png)| ![CVAE-g](imgs/CVAE-g.png) |
+| Beta-VAE | ![BetaVAE-o](imgs/BetaVAE-o.png)| ![BetaVAE-r](imgs/BetaVAE-r.png)| ![BetaVAE-g](imgs/BetaVAE-g.png) |
+| Disentangled Beta-VAE | | | |
+| Beta-TC-VAE | | | |
+
+
 ## References
 
 1. Subramanian, A.K, PyTorch-VAE, GitHub repository, GitHub (2020), online available at [https://github.com/AntixK/PyTorch-VAE](https://github.com/AntixK/PyTorch-VAE).

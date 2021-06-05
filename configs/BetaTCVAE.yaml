@@ -1,0 +1,38 @@
+model:
+  name: "BetaTCVAE"
+  image_size: 64
+  in_channels: 3
+  alpha: 1
+  beta: 6
+  gamma: 1
+  capacity_max_iter: 10000
+  latent_dim: 128
+  hidden_dim: [32, 64, 128, 256, 512]
+
+dataset:
+  type: "CelebA"
+  path: "data"
+  img_size: 64
+  batch_size: 144
+  center_crop: 148
+
+optimizer:
+  adam_beta1: 0.9
+  adam_beta2: 0.999
+  learning_rate: 0.005
+  weight_decay: 0.0
+  eps: 0.0000001
+
+scheduler:
+  gamma: 0.95
+
+trainer:
+  max_epoch: 50
+  multigpu: False
+
+inferencer:
+  sample_num: 144
+
+stats:
+  stats_dir: "stats"
+  stats_folder: "BetaTCVAE-CelebA"

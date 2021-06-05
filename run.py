@@ -13,6 +13,7 @@ from models.VAE import VAE
 from models.CVAE import CVAE
 from models.BetaVAE import BetaVAE
 from models.DisentangledBetaVAE import DisentangledBetaVAE
+from models.BetaTCVAE import BetaTCVAE
 
 
 logging.setLoggerClass(ColoredLogger)
@@ -53,6 +54,8 @@ elif model_name == 'BetaVAE':
     model = BetaVAE(**model_params)
 elif model_name == 'DisentangledBetaVAE':
     model = DisentangledBetaVAE(**model_params)
+elif model_name == 'BetaTCVAE':
+    model = BetaTCVAE(**model_params)
 else:
     raise NotImplementedError('Invalid model name.')
 
@@ -154,7 +157,9 @@ def train_one_epoch(epoch):
             res = model(x, labels = labels)
             loss_dict = model.loss(
                 *res,
-                kl_weight = batch_size / total_train_samples
+                kl_weight = batch_size / total_train_samples,
+                batch_size = batch_size,
+                dataset_size = total_train_samples
             )
             loss = loss_dict['loss']
             loss.backward()
@@ -180,7 +185,9 @@ def eval_one_epoch(epoch):
                 res = model(x, labels = labels)
                 loss_dict = model.loss(
                     *res,
-                    kl_weight = batch_size / total_val_samples
+                    kl_weight = batch_size / total_val_samples,
+                    batch_size = batch_size,
+                    dataset_size = total_val_samples
                 )
                 loss = loss_dict['loss']
             pbar.set_description('Eval epoch {}, loss: {:.8f}'.format(epoch + 1, loss.item()))
@@ -200,7 +207,8 @@ def inference(epoch = -1):
     x, labels = next(iter(val_dataloader))
     x = x.to(device)
     labels = labels.to(device)
-    recon = model.reconstruct(x, labels = labels)
+    with torch.no_grad():
+        recon = model.reconstruct(x, labels = labels)
     nrow = int(np.ceil(np.sqrt(batch_size)))
     reconstructed_dir = os.path.join(stats_dir, 'reconstructed_images')
     generated_dir = os.path.join(stats_dir, 'generated_images')
@@ -220,13 +228,15 @@ def inference(epoch = -1):
         normalize = True,
         nrow = nrow
     )
-    samples = model.sample(inferencer_params.get('sample_num', 144), device, labels = labels)
+    with torch.no_grad():
+        samples = model.sample(inferencer_params.get('sample_num', 144), device, labels = labels)
     tuitls.save_image(
         samples.data,
         os.path.join(generated_dir, "generated_{}.png".format(suffix)),
         normalize = True,
         nrow = nrow
     )
+    logger.info('Finish inference successfully.')
     
 
 def train(start_epoch):
