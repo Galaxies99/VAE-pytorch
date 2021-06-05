@@ -4,11 +4,12 @@ import torch.nn.functional as F
 from einops.layers.torch import Rearrange
 
 
-class VAE(nn.Module):
-    def __init__(self, image_size, in_channels, **kwargs):
-        super(VAE, self).__init__()
+class BetaVAE(nn.Module):
+    def __init__(self, image_size, in_channels, beta, **kwargs):
+        super(BetaVAE, self).__init__()
         self.latent_dim = kwargs.get('latent_dim', 128)
         self.hidden_dim = kwargs.get('hidden_dim', [32, 64, 128, 256, 512])
+        self.beta = beta
         self.encoder_layer_num = len(self.hidden_dim)
         self.zipped_size = 2 ** self.encoder_layer_num
 
@@ -108,7 +109,7 @@ class VAE(nn.Module):
         kl_loss = torch.mean(-0.5 * torch.sum(1 + log_var - mu ** 2 - log_var.exp(), dim = 1), dim = 0)
         recon_loss = F.mse_loss(recon, x)
         kl_weight = kwargs['kl_weight']
-        loss = kl_loss * kl_weight + recon_loss
+        loss = self.beta * kl_loss * kl_weight + recon_loss
         return {
             'loss': loss,
             'reconstruction loss': recon_loss, 

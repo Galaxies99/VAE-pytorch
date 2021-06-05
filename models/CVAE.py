@@ -2,13 +2,15 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from einops.layers.torch import Rearrange
+from einops import rearrange
 
 
-class VAE(nn.Module):
+class CVAE(nn.Module):
     def __init__(self, image_size, in_channels, **kwargs):
-        super(VAE, self).__init__()
+        super(CVAE, self).__init__()
         self.latent_dim = kwargs.get('latent_dim', 128)
         self.hidden_dim = kwargs.get('hidden_dim', [32, 64, 128, 256, 512])
+        self.num_classes = kwargs.get('num_classes', 40)
         self.encoder_layer_num = len(self.hidden_dim)
         self.zipped_size = 2 ** self.encoder_layer_num
 
@@ -28,9 +30,12 @@ class VAE(nn.Module):
         if self.image_H % self.zipped_size != 0 or self.image_W % self.zipped_size != 0:
             raise AttributeError('The size of image should be divided by {}'.format(self.zipped_size))
 
-        # Encoder of VAE
+        # Encoder of VAE        
+        self.image_embedding = nn.Conv2d(self.in_channels, self.in_channels, kernel_size = 1)
+        self.label_embedding = nn.Linear(self.num_classes, self.image_H * self.image_W)
+
         encoder_layers = []
-        last_channels = self.in_channels
+        last_channels = self.in_channels + 1
 
         for channels in self.hidden_dim:
             encoder_layers.append(
@@ -69,7 +74,7 @@ class VAE(nn.Module):
             last_channels = prev_channels
         
         self.decoder = nn.Sequential(
-            nn.Linear(self.latent_dim, self.hidden_dim[-1] * self.flatten_size),
+            nn.Linear(self.latent_dim + self.num_classes, self.hidden_dim[-1] * self.flatten_size),
             Rearrange('b (c h w) -> b c h w', h = self.flatten_H, w = self.flatten_W),
             *decoder_layers
         )
@@ -85,7 +90,7 @@ class VAE(nn.Module):
     def encode(self, x):
         # x: B * C * H * W, double check
         _, C, H, W = x.shape
-        assert C == self.in_channels and H == self.image_H and W == self.image_W
+        assert C == self.in_channels + 1 and H == self.image_H and W == self.image_W
         latent_var = self.encoder(x)
         return [self.mu(latent_var), self.log_var(latent_var)]
     
@@ -98,13 +103,19 @@ class VAE(nn.Module):
         return eps * std + mu
     
     def forward(self, x, **kwargs):
-        mu, log_var = self.encode(x)
-        z = self.reparameterize(mu, log_var)
+        y = kwargs['labels'].float()
+        input = torch.cat([
+            self.image_embedding(x),
+            rearrange(self.label_embedding(y), 'b (c h w) -> b c h w', c = 1, h = self.image_H, w = self.image_W)
+        ], dim = 1)
+        mu, log_var = self.encode(input)
+        z = torch.cat([
+            self.reparameterize(mu, log_var),
+            y
+        ], dim = 1)
         return [self.decode(z), x, mu, log_var]
     
     def loss(self, recon, x, mu, log_var, **kwargs):
-        if 'kl_weight' not in kwargs.keys():
-            raise AttributeError('Please pass parameter "kl_weight" into the loss function.')
         kl_loss = torch.mean(-0.5 * torch.sum(1 + log_var - mu ** 2 - log_var.exp(), dim = 1), dim = 0)
         recon_loss = F.mse_loss(recon, x)
         kl_weight = kwargs['kl_weight']
@@ -116,7 +127,12 @@ class VAE(nn.Module):
         }
 
     def sample(self, num, device, **kwargs):
+        y = kwargs['labels'].float()
         z = torch.randn(num, self.latent_dim).to(device)
+        z = torch.cat([
+            torch.randn(num, self.latent_dim).to(device),
+            y
+        ], dim = 1)
         return self.decode(z)
     
     def reconstruct(self, x, **kwargs):
