@@ -22,11 +22,12 @@ Personal Pytorch Implementations of Variational Auto-Encoders.
 
 | Models | Generated Images |
 | :-: |  :-: |
-| VAE ([Code](models/VAE.py), [Configs](configs/VAE-CelebA.yaml)) [Ref. 2] | ![VAE](imgs/VAE-g.png) |
-| CVAE ([Code](models/CVAE.py), [Configs](configs/CVAE-CelebA.yaml)) [Ref. 3] | ![CVAE](imgs/CVAE-g.png) |
-| Beta-VAE ([Code](models/BetaVAE.py), [Configs](configs/BetaVAE-CelebA.yaml)) [Ref. 4] | ![BetaVAE](imgs/BetaVAE-g.png) |
+| VAE ([Code](models/VAE.py), [Configs](configs/VAE-CelebA.yaml)) [2] | ![VAE](imgs/VAE-g.png) |
+| CVAE ([Code](models/CVAE.py), [Configs](configs/CVAE-CelebA.yaml)) [3] | ![CVAE](imgs/CVAE-g.png) |
+| Beta-VAE ([Code](models/BetaVAE.py), [Configs](configs/BetaVAE-CelebA.yaml)) [4] | ![BetaVAE](imgs/BetaVAE-g.png) |
 | Disentangled Beta-VAE ([Code](models/DisentangledBetaVAE.py), [Configs](configs/DisentangledBetaVAE-CelebA.yaml))  [Ref. 5] | ![DisentangledBetaVAE](imgs/DisentangledBetaVAE-g.png) |
-| Beta-TC-VAE ([Code](models/BetaTCVAE.py), [Configs](configs/BetaTCVAE-CelebA.yaml)) [Ref. 6] | ![BetaTCVAE](imgs/BetaTCVAE-g.png) |
+| Beta-TC-VAE ([Code](models/BetaTCVAE.py), [Configs](configs/BetaTCVAE-CelebA.yaml)) [6] | ![BetaTCVAE](imgs/BetaTCVAE-g.png) |
+| DFC-VAE ([Code](models/DFCVAE.py), [Configs](configs/DFCVAE-CelebA.yaml)) [6] | **TO BE TRAINED** |
 
 
 ## References
