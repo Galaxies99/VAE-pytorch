@@ -26,7 +26,7 @@ Personal Pytorch Implementations of Variational Auto-Encoders.
 | CVAE ([Code](models/CVAE.py), [Configs](configs/CVAE-CelebA.yaml)) [Ref. 3] | ![CVAE](imgs/CVAE-g.png) |
 | Beta-VAE ([Code](models/BetaVAE.py), [Configs](configs/BetaVAE-CelebA.yaml)) [Ref. 4] | ![BetaVAE](imgs/BetaVAE-g.png) |
 | Disentangled Beta-VAE ([Code](models/DisentangledBetaVAE.py), [Configs](configs/DisentangledBetaVAE-CelebA.yaml))  [Ref. 5] | ![DisentangledBetaVAE](imgs/DisentangledBetaVAE-g.png) |
-| Beta-TC-VAE ([Code](models/BetaTCVAE.py), [Configs](configs/BetaTCVAE-CelebA.yaml)) [Ref. 6] | **TO BE TRAINED** |
+| Beta-TC-VAE ([Code](models/BetaTCVAE.py), [Configs](configs/BetaTCVAE-CelebA.yaml)) [Ref. 6] | ![BetaTCVAE](imgs/BetaTCVAE-g.png) |
 
 
 ## References
