@@ -33,7 +33,7 @@ CFG_FILE = FLAGS.cfg
 CLEAN_CACHE = FLAGS.clean_cache
 MODE = FLAGS.mode
 
-if MODE not in ['train', 'test']:
+if MODE not in ['train', 'inference']:
     raise AttributeError('mode should be either "train" or "inference".')
 
 with open(CFG_FILE, 'r') as cfg_file:
