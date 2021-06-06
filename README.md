@@ -30,6 +30,10 @@ Personal Pytorch Implementations of Variational Auto-Encoders.
 | DFC-VAE ([Code](models/DFCVAE.py), [Configs](configs/DFCVAE-CelebA.yaml)) [7] | ![DFCVAE](imgs/DFCVAE-g.png) |
 | MSSIM-VAE ([Code](models/MSSIMVAE.py), [Configs](configs/MSSIMVAE-CelebA.yaml)) [8] | ![MSSIMVAE](imgs/MSSIMVAE-g.png) |
 
+## Performance on CUB200 Dataset
+
+We also provide the CUB200 dataset configurations. But unfortunately, our VAEs performs badly on this generation task.
+
 ## References
 
 1. Subramanian, A.K, PyTorch-VAE, GitHub repository, GitHub (2020), online available at [https://github.com/AntixK/PyTorch-VAE](https://github.com/AntixK/PyTorch-VAE).

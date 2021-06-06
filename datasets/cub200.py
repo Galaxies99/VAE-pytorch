@@ -74,7 +74,7 @@ class Cub200(Dataset):
         bbox = self.bounding_boxes[id]
         label = self.label_list[id]
         file_path = os.path.join(self.dataset_path, 'images', filename)
-        img = cv2.imread(file_path)
+        img = cv2.imread(file_path, )
         xmin, ymin, xoffset, yoffset = bbox
         center = [int(xmin + xoffset / 2), int(ymin + yoffset / 2)]
         h = max(xoffset, yoffset)
@@ -91,8 +91,8 @@ class Cub200(Dataset):
             label = res_label
         else:
             label = np.array([label], dtype = np.float32)
-        img = np.array(img).transpose(2, 0, 1) / 255.0
-        img = (img * 2 - 1).astype(np.float32)
+        img = img[:, :, ::-1].transpose(2, 0, 1) / 255.0
+        img = np.array(img * 2 - 1).astype(np.float32)
         return img, label
 
 

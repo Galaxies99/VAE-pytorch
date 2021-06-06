@@ -1,7 +1,8 @@
 model:
-  name: "VAE"
+  name: "CVAE"
   image_size: 128
   in_channels: 3
+  num_classes: 200
   latent_dim: 1536
   hidden_dim: [32, 64, 128, 256, 512, 1024, 2048]
 
@@ -31,4 +32,4 @@ inferencer:
 
 stats:
   stats_dir: "stats"
-  stats_folder: "VAE-CUB200"
+  stats_folder: "CVAE-CUB200"
