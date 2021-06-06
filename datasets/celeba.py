@@ -1,12 +1,12 @@
 from torchvision.datasets import CelebA
 from torchvision import transforms
 
-def CelebADataset(root, split, img_size, center_crop, download = False):
+def CelebADataset(root, split, img_size, center_crop):
     return CelebA(
         root = root,
         split = split,
         transform = transform(img_size, center_crop),
-        download = download
+        download = False
     )
 
 def transform(img_size, center_crop):

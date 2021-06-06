@@ -27,8 +27,8 @@ Personal Pytorch Implementations of Variational Auto-Encoders.
 | Beta-VAE ([Code](models/BetaVAE.py), [Configs](configs/BetaVAE-CelebA.yaml)) [4] | ![BetaVAE](imgs/BetaVAE-g.png) |
 | Disentangled Beta-VAE ([Code](models/DisentangledBetaVAE.py), [Configs](configs/DisentangledBetaVAE-CelebA.yaml))  [Ref. 5] | ![DisentangledBetaVAE](imgs/DisentangledBetaVAE-g.png) |
 | Beta-TC-VAE ([Code](models/BetaTCVAE.py), [Configs](configs/BetaTCVAE-CelebA.yaml)) [6] | ![BetaTCVAE](imgs/BetaTCVAE-g.png) |
-| DFC-VAE ([Code](models/DFCVAE.py), [Configs](configs/DFCVAE-CelebA.yaml)) [7] | **TO BE TRAINED** |
-| MSSIM-VAE ([Code](models/MSSIMVAE.py), [Configs](configs/MSSIMVAE-CelebA.yaml)) [8] | **TO BE TRAINED** |
+| DFC-VAE ([Code](models/DFCVAE.py), [Configs](configs/DFCVAE-CelebA.yaml)) [7] | ![DFCVAE](imgs/DFCVAE-g.png) |
+| MSSIM-VAE ([Code](models/MSSIMVAE.py), [Configs](configs/MSSIMVAE-CelebA.yaml)) [8] | ![MSSIMVAE](imgs/MSSIMVAE-g.png) |
 
 ## References
 

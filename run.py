@@ -7,6 +7,7 @@ import numpy as np
 from tqdm import tqdm
 from utils.logger import ColoredLogger
 from datasets.celeba import CelebADataset
+from datasets.cub200 import Cub200Dataset
 from torch.utils.data import DataLoader
 import torchvision.utils as tuitls
 from models.VAE import VAE
@@ -76,22 +77,37 @@ else:
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     model.to(device)
 
-if dataset_params.get('type', 'CelebA') == 'CelebA':
-    logger.info('Building datasets ...')
+dataset_type = dataset_params.get('type', 'CelebA')
+if dataset_type == 'CelebA':
+    logger.info('Building {} datasets ...'.format(dataset_type))
     train_dataset = CelebADataset(
         root = dataset_params.get('path', 'data'),
         split = 'train',
         img_size = dataset_params.get('img_size', 64),
-        center_crop = dataset_params.get('center_crop', 148),
-        download = False
+        center_crop = dataset_params.get('center_crop', 148)
     )
     val_dataset = CelebADataset(
         root = dataset_params.get('path', 'data'),
         split = 'test',
         img_size = dataset_params.get('img_size', 64),
-        center_crop = dataset_params.get('center_crop', 148),
-        download = False
+        center_crop = dataset_params.get('center_crop', 148)
     )
+elif dataset_type == 'CUB200':
+    logger.info('Building {} datasets ...'.format(dataset_type))
+    train_dataset = Cub200Dataset(
+        root = dataset_params.get('path', 'data'),
+        split = 'train',
+        img_size = dataset_params.get('img_size', 128),
+        center_crop_scale = dataset_params.get('center_crop_scale', 1.2)
+    )
+    val_dataset = Cub200Dataset(
+        root = dataset_params.get('path', 'data'),
+        split = 'test',
+        img_size = dataset_params.get('img_size', 128),
+        center_crop_scale = dataset_params.get('center_crop_scale', 1.2)
+    )
+else:
+    raise NotImplementedError('Invalid dataset type.')
 
 logger.info('Building dataloader ...')
 batch_size = dataset_params.get('batch_size', 144)
