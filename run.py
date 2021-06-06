@@ -15,6 +15,7 @@ from models.BetaVAE import BetaVAE
 from models.DisentangledBetaVAE import DisentangledBetaVAE
 from models.BetaTCVAE import BetaTCVAE
 from models.DFCVAE import DFCVAE
+from models.MSSIMVAE import MSSIMVAE
 
 
 logging.setLoggerClass(ColoredLogger)
@@ -59,6 +60,8 @@ elif model_name == 'BetaTCVAE':
     model = BetaTCVAE(**model_params)
 elif model_name == 'DFCVAE':
     model = DFCVAE(**model_params)
+elif model_name == 'MSSIMVAE':
+    model = MSSIMVAE(**model_params)
 else:
     raise NotImplementedError('Invalid model name.')
 
