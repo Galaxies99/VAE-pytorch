@@ -10,6 +10,42 @@ Personal Pytorch Implementations of Variational Auto-Encoders. This repository m
 - DFC-VAE
 - MSSIM-VAE
 
+## Run
+
+### Training
+
+To train the models, just execute the following command after setting the configurations correctly.
+
+```bash
+python run.py --cfg [Configuration File] --mode train
+```
+
+where `[Configuration File]` is the path to your configuration file, and `--mode train` can be omitted.
+
+### Inference
+
+For inference, just execute the following command after setting the configurations correctly.
+
+```bash
+python run.py --cfg [Configuration File] --mode inference
+```
+
+where `[Configuration File]` is the path to your configuration file, and there should be a checkpoint file in the corresponding path in `stats` folder.
+
+## Configurations
+
+The configuration file should be in `yaml` format. Specifically, the following fields can be specified in the configuration file.
+
+- `model`, which describes the parameters of the model, including model name and other parameters.
+- `dataset`, which describes the parameter of the dataset, including dataset type and other parameters.
+- `optimizer`, which describes the parameter of the `AdamW` optimizer.
+- `scheduler`, which describes the parameter of the `ExponentialLR` learning rate scheduler.
+- `trainer`, which describes the parameters used in the training process, such as `max_epoch` and `multigpu`.
+- `inference`, which describes the parameters used in inference stage, such as `sample_num`.
+- `stats`, which describes the path to the statistics file, such as `stats_dir` and `stats_folder`. The checkpoint, reconstructed images and generated images should be stored in `stats_dir/stats_folder` directory.
+
+You can see the given configuration files for more details.
+
 ## Performance on CelebA Dataset
 
 The pretrained models and the generated images along with the reconstructed images are released on [Baidu Netdisk](https://pan.baidu.com/s/1X668uvUpQ1bFFHXj4j4Iew) (Extract code: lt4k).
