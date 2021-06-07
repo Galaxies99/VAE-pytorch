@@ -64,6 +64,17 @@ The pretrained models and the generated images along with the reconstructed imag
 
 We also provide the CUB200 dataset configurations. But unfortunately, our VAEs performs badly on this generation task. Therefore, the performance is omitted here.
 
+## Citations
+
+```bibtex
+@misc{fang2021vaepytorch,
+  author =       {Hongjie Fang},
+  title =        {VAE-pytorch},
+  howpublished = {\url{https://github.com/Galaxies99/VAE-pytorch}},
+  year =         {2021}
+}
+```
+
 ## References
 
 1. Subramanian, A.K, PyTorch-VAE, GitHub repository, GitHub (2020), online available at [https://github.com/AntixK/PyTorch-VAE](https://github.com/AntixK/PyTorch-VAE).
